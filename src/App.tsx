@@ -5,7 +5,6 @@ import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
 import './firebase';
 
-
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
 
@@ -26,6 +25,8 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import CrearNota from './components/CrearNota';
 import EditarNota from './components/EditarNota'
+import Draw from './components/Draw';
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -46,6 +47,9 @@ const App: React.FC = () => (
         </Route>
         <Route path = "/editar-nota/:id">
         <EditarNota />
+        </Route>
+        <Route path = "/crear-dibujo">
+        <Draw />
         </Route>
     </Switch>
   </Router>

@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "notas",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}

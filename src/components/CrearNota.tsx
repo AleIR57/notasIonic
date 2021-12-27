@@ -1,23 +1,34 @@
 import './CrearNota.css';
-import React, { ChangeEvent, Fragment, useState} from 'react';
+import React, { ChangeEvent, Fragment, useState, useEffect} from 'react';
 import { IonButton, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonPage, IonTextarea } from '@ionic/react';
-import { chevronBack, shirtOutline, shareOutline, ellipsisVerticalOutline, checkmark, micOutline, imageOutline, pencilOutline, checkboxOutline, createOutline } from 'ionicons/icons'
+import { chevronBack, shirtOutline, shareOutline, ellipsisVerticalOutline, checkmark, micOutline, imageOutline, pencilOutline, checkboxOutline, createOutline, stopCircleOutline } from 'ionicons/icons'
 import '../funcionesFirebase';
 import { addOrEdit } from '../funcionesFirebase';
+import { Camera, CameraResultType} from '@capacitor/camera'
+
+import { VoiceRecorder, VoiceRecorderPlugin, RecordingData, GenericResponse, CurrentRecordingStatus } from 'capacitor-voice-recorder';
+
+
 
 interface ContainerProps { }
 
 const CrearNota: React.FC<ContainerProps> = () => {
+ 
 
   const [hoverActivo, setHoverActivo] = useState(false);
   const [menuActivo, setMenuActivo] = useState(false);
+  const [audioActivo, setAudioActivo] = useState(false);
 
   const initialStateValues = {
     titulo: '',
     contenido: '',
     };
 
+  
+
   const [values, setValues] = useState(initialStateValues);
+  const [image, setImage] = useState<string>('');
+  const [audio, setAudio] = useState([] as any);
 
   const handleInputChange = (e: React.ChangeEvent<any>)  =>{
     const {name, value } = e.target;
@@ -47,6 +58,33 @@ const CrearNota: React.FC<ContainerProps> = () => {
   const desactivarMenu = () =>{
     setHoverActivo(false);
     setMenuActivo(false);
+  }
+
+  const takePicture = async () =>{
+    const photo = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: true,
+      resultType: CameraResultType.Uri
+    })
+    setImage(photo.webPath || ''); 
+  }
+
+  const recordAudio = async ()=>{
+    VoiceRecorder.requestAudioRecordingPermission().then((result: GenericResponse) => setAudioActivo(result.value))
+
+   
+      VoiceRecorder.startRecording()
+  .then((result: GenericResponse) => setAudioActivo(result.value))
+  .catch(error => console.log(error))
+  }
+
+  const stopAudio = async ()=>{
+    VoiceRecorder.stopRecording()
+    .then((result: RecordingData) => setAudio(result.value))
+    
+    .catch(error => console.log(error))
+    setAudioActivo(false);
+    console.log(audio);
   }
 
   return (
@@ -79,21 +117,27 @@ const CrearNota: React.FC<ContainerProps> = () => {
       <IonInput type = "text" className="form-control" value = {values.titulo} placeholder = "Título" name = "titulo" onMouseEnter = {() => activarHover()}   onMouseLeave = {() => desactivarHover()} onInput = {(e:any) => handleInputChange(e)} ></IonInput>
   </IonItem>
   <IonItem>
-  <IonTextarea onMouseEnter = {() => activarMenu()} value = {values.contenido} onMouseLeave = {() => desactivarMenu()} placeholder="Empiece a escribir" name = "contenido" onInput = {(e:any) => handleInputChange(e)}></IonTextarea>
+  <IonTextarea onMouseUp = {() => activarMenu()} value = {values.contenido} onMouseDown= {() => desactivarMenu()} placeholder="Empiece a escribir" name = "contenido" onInput = {(e:any) => handleInputChange(e)}>{image !== '' ? <img src={image} /> : ''}{audio !== '' ?   <embed  src={audio.recordDataBase64} width="100%" height= "50em" />: ''} </IonTextarea>
   </IonItem>
+
+ 
+
+
+
  
   </form>
 
     <div className  = "menu-opciones">
     {menuActivo ?  
-     <IonItem className = "opciones">
-     <IonIcon icon = {micOutline} className="icono-menu"></IonIcon>
-     <IonIcon icon = {imageOutline} className="icono-menu"></IonIcon>
-     <IonIcon icon = {createOutline} className="icono-menu"></IonIcon>
-     <IonIcon icon = {checkboxOutline} className="icono-menu"></IonIcon>
-     <IonIcon icon = {pencilOutline} className="icono-menu"></IonIcon>
+     <IonItem className = "opciones " onMouseEnter = {() => activarHover()}>
+      {!audioActivo ? <IonIcon icon = {micOutline} className="icono-menu" onClick = {() => recordAudio()}></IonIcon> : <IonIcon icon = {stopCircleOutline} className="icono-menu" onClick = {() => stopAudio()}></IonIcon> } 
+     <IonIcon icon = {imageOutline} className="icono-menu" onClick = {() => takePicture()}></IonIcon>
+     <IonIcon icon = {createOutline} className="icono-menu" onMouseEnter = {() => activarHover()}></IonIcon>
+     <IonIcon icon = {checkboxOutline} className="icono-menu" onMouseEnter = {() => activarHover()}></IonIcon>
+     <IonIcon icon = {pencilOutline} className="icono-menu" onMouseEnter = {() => activarHover()}></IonIcon>
    </IonItem>
  : ""}
+     
      
 
     </div>
