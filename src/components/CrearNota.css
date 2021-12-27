@@ -1,0 +1,14 @@
+IonTextArea{
+    --pading-end: 100%;
+}
+
+.opciones{
+    justify-content: space-around;
+   
+}
+
+.icono-menu{
+    margin-left: auto;
+    margin-right: auto;
+
+}
