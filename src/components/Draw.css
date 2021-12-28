@@ -1,11 +1,19 @@
-.navbar {
- 
-    overflow-x: scroll;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-  }
+.dibujo{
+
+  width: 100%;
+}
   
+
+.navbar {
+  position: fixed;
+  bottom: 0; /* or whatever position is desired */
+    left: 0;
+    right: 0;
+
+    /* center all inline content */
+    text-align: center;
+} 
+
   /* Style the links inside the navigation bar */
   .navbar a {
     float: left;
@@ -29,21 +37,96 @@
     color: white;
   }
 
-.dibujo{
-    margin-left: auto;
-    margin-right: auto;
+.color-img:first-child{
+  border-top-left-radius: 100px;
+  border-bottom-left-radius: 100px;
 }
 
-.color-img:first-child{
-    border-top-left-radius: 100px;
-    border-bottom-left-radius: 100px;
+.color-img:last-child{
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 100px;
+}
+
+.boton-img{
+  text-align: left;
+    display:inline-block;
+    width: 2em;
+  height: 2em;
+    border-radius: 100px;
+    box-shadow: 0 0 8px lightgray;
+}
+
+
+.boton-pencil{
+  background: url('https://cdn.pixabay.com/photo/2012/04/13/12/50/pencil-32276_960_720.png');
+  text-align: left;
+    display:inline-block;
+  width: 2em;
+  height: 2em;
+  box-shadow: 0 0 8px lightgray;
+  
 }
 
 .color-img{
-   
+  text-align: left;
+    display:inline-block;
     width: 1.5em;
     height: 1.5em;
 
 }
+
+
+
+.color-img:nth-child(1){
+  background-color: #2C272E;
+}
+
+.color-img:nth-child(2){
+  background-color: #EAEAEA;
+}
+
+.color-img:nth-child(3){
+  background-color: #F56FAD;
+}
+
+.color-img:nth-child(4){
+  background-color: #9145B6;
+}
+
+.color-img:nth-child(5){
+  background-color: #35589A;
+}
+.color-img:nth-child(6){
+  background-color: #3DB2FF;
+}
+.color-img:nth-child(7){
+  background-color: #42DEE1;
+}
+.color-img:nth-child(8){
+  background-color: #34BE82;
+}
+.color-img:nth-child(9){
+  background-color: #B2EA70;
+}
+.color-img:nth-child(10){
+  background-color: #F2F013;
+}
+.color-img:nth-child(11){
+  background-color: #FABB51;
+}
+.color-img:nth-child(12){
+  background-color: #FF8E00;
+}
+.color-img:nth-child(13){
+  background-color: #FF7F3F;
+}
+.color-img:nth-child(14){
+  background-color: #DD4A48;
+}
+
+.color-img:nth-child(15){
+  background-color: #8F5B4A;
+}
+
 
 

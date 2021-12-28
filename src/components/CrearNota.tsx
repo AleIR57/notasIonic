@@ -5,7 +5,7 @@ import { chevronBack, shirtOutline, shareOutline, ellipsisVerticalOutline, check
 import '../funcionesFirebase';
 import { addOrEdit } from '../funcionesFirebase';
 import { Camera, CameraResultType} from '@capacitor/camera'
-
+import { BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
 import { VoiceRecorder, VoiceRecorderPlugin, RecordingData, GenericResponse, CurrentRecordingStatus } from 'capacitor-voice-recorder';
 
 
@@ -87,6 +87,8 @@ const CrearNota: React.FC<ContainerProps> = () => {
     console.log(audio);
   }
 
+
+
   return (
     <div>
    
@@ -116,8 +118,8 @@ const CrearNota: React.FC<ContainerProps> = () => {
 
       <IonInput type = "text" className="form-control" value = {values.titulo} placeholder = "Título" name = "titulo" onMouseEnter = {() => activarHover()}   onMouseLeave = {() => desactivarHover()} onInput = {(e:any) => handleInputChange(e)} ></IonInput>
   </IonItem>
-  <IonItem>
-  <IonTextarea onMouseUp = {() => activarMenu()} value = {values.contenido} onMouseDown= {() => desactivarMenu()} placeholder="Empiece a escribir" name = "contenido" onInput = {(e:any) => handleInputChange(e)}>{image !== '' ? <img src={image} /> : ''}{audio !== '' ?   <embed  src={audio.recordDataBase64} width="100%" height= "50em" />: ''} </IonTextarea>
+  <IonItem >
+  <IonTextarea autoGrow = {true}   onMouseUp = {() => activarMenu()} value = {values.contenido} onMouseDown= {() => desactivarMenu()} placeholder="Empiece a escribir" name = "contenido" onInput = {(e:any) => handleInputChange(e)}>{image !== '' ? <img src={image} /> : ''}{audio !== '' ?   <embed  src={audio.recordDataBase64} width="100%" height= "50em" />: ''} </IonTextarea>
   </IonItem>
 
  
@@ -131,8 +133,8 @@ const CrearNota: React.FC<ContainerProps> = () => {
     {menuActivo ?  
      <IonItem className = "opciones " onMouseEnter = {() => activarHover()}>
       {!audioActivo ? <IonIcon icon = {micOutline} className="icono-menu" onClick = {() => recordAudio()}></IonIcon> : <IonIcon icon = {stopCircleOutline} className="icono-menu" onClick = {() => stopAudio()}></IonIcon> } 
-     <IonIcon icon = {imageOutline} className="icono-menu" onClick = {() => takePicture()}></IonIcon>
-     <IonIcon icon = {createOutline} className="icono-menu" onMouseEnter = {() => activarHover()}></IonIcon>
+     <IonIcon icon = {imageOutline} className="icono-menu" onClick = {() => takePicture()}></IonIcon> 
+     <IonIcon icon = {createOutline} className="icono-menu"></IonIcon>
      <IonIcon icon = {checkboxOutline} className="icono-menu" onMouseEnter = {() => activarHover()}></IonIcon>
      <IonIcon icon = {pencilOutline} className="icono-menu" onMouseEnter = {() => activarHover()}></IonIcon>
    </IonItem>

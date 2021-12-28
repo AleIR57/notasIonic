@@ -17,3 +17,22 @@ img{
     height: 5em;
     width: 5em;
 }
+
+.link-dibujo{
+    text-decoration: none;
+
+}
+
+.contenido{
+    height: 100%;
+}
+
+.menu-opciones{
+    position: fixed;
+    bottom: 0; /* or whatever position is desired */
+      left: 0;
+      right: 0;
+    z-index: 1000;
+      /* center all inline content */
+      text-align: center;
+}
