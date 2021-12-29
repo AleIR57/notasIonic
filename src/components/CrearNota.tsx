@@ -7,14 +7,17 @@ import { addOrEdit } from '../funcionesFirebase';
 import { Camera, CameraResultType} from '@capacitor/camera'
 import { BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
 import { VoiceRecorder, VoiceRecorderPlugin, RecordingData, GenericResponse, CurrentRecordingStatus } from 'capacitor-voice-recorder';
+import { copyFileSync } from 'fs';
 
 
 
 interface ContainerProps { }
 
 const CrearNota: React.FC<ContainerProps> = () => {
- 
-
+  const textArea = useRef<HTMLIonTextareaElement>(null);
+  const [textVal, setTextVal] = useState('');
+  const [textFromTextArea, setTextFromTextArea] = useState(''); 
+  const [seleccionarTexto, setSeleccionarTexto] = useState(true);
   const [hoverActivo, setHoverActivo] = useState(false);
   const [menuActivo, setMenuActivo] = useState(false);
   const [audioActivo, setAudioActivo] = useState(false);
@@ -22,6 +25,9 @@ const CrearNota: React.FC<ContainerProps> = () => {
   const initialStateValues = {
     titulo: '',
     contenido: '',
+    imagen: '',
+    audio: '',
+    fondo: '',
     };
 
     const imageUrl = [{
@@ -52,18 +58,20 @@ const CrearNota: React.FC<ContainerProps> = () => {
   const [values, setValues] = useState(initialStateValues);
   const [image, setImage] = useState<string>('');
   const [audio, setAudio] = useState([] as any);
-
+ 
 
   const divStyle = {
     color: 'black',
     backgroundImage: 'url(' + imagenDeFondo + ')',
     backgroundSize: 'cover',
+  
   };
  
 
-  const handleInputChange = (e: React.ChangeEvent<any>)  =>{
-    const {name, value } = e.target;
-    setValues({...values, [name]: value});
+  const handleInputChange = async(e: React.ChangeEvent<any>)  =>{
+    const {name, value } =  await e.target;
+     setValues({...values, [name]: value});
+     console.log(values);
   }
 
   const handleSubmit = (e: React.ChangeEvent<any>) =>{
@@ -97,7 +105,9 @@ const CrearNota: React.FC<ContainerProps> = () => {
       allowEditing: true,
       resultType: CameraResultType.Uri
     })
-    setImage(photo.webPath || ''); 
+    setImage(photo.webPath|| ''); 
+    console.log(image);
+    setValues({...values, ['imagen']: image,})
   }
 
   const recordAudio = async ()=>{
@@ -116,6 +126,7 @@ const CrearNota: React.FC<ContainerProps> = () => {
     .catch(error => console.log(error))
     setAudioActivo(false);
     console.log(audio);
+    setValues({...values,['audio']: String(audio.recordDataBase64)});
   }
 
   const agregarRadioButton = () =>{
@@ -131,11 +142,23 @@ const CrearNota: React.FC<ContainerProps> = () => {
 
   const setBackground = (imagenUrl: string) =>{
     setImagenDeFondo(imagenUrl);
+    setValues({...values, ['fondo']: imagenDeFondo}); 
+    setValues({...values, ['fondo']: imagenDeFondo}); 
     setShowBackground(false);
   }
 
   const activateTextOptions = () =>{
     setShowTextOptions(true);
+  }
+
+  const getSelectedText = (text: any) =>{
+    console.log(text);
+    setTextVal(text);
+    console.log("todo el contenido: " + textArea.current?.value);
+    textArea.current!.value += text
+
+    console.log("resultado: " + textVal);
+    
   }
 
 
@@ -191,25 +214,13 @@ const CrearNota: React.FC<ContainerProps> = () => {
       <IonInput type = "text" className="form-control" value = {values.titulo} placeholder = "Título" name = "titulo" onMouseEnter = {() => activarHover()}   onMouseLeave = {() => desactivarHover()} onInput = {(e:any) => handleInputChange(e)} ></IonInput>
   </IonItem>
   <IonItem color = "transparent" lines = "none">
-  <IonTextarea  rows = {100} autoGrow = {true}   onMouseUp = {() => activarMenu()} value = {values.contenido} onMouseDown= {() => desactivarMenu()} placeholder="Empiece a escribir" name = "contenido" onInput = {(e:any) => handleInputChange(e)}>{image !== '' ? <img src={image} /> : ''}{audio !== '' ?   <embed  src={audio.recordDataBase64} width="100%" height= "50em" />: ''} </IonTextarea>
+  <IonTextarea  onClick = {() => getSelectedText(window.getSelection()?.toString())} ref = {textArea}  rows = {100} autoGrow = {true}   onMouseUp = {() => activarMenu()} value = {values.contenido} onMouseDown= {() => desactivarMenu()} placeholder="Empiece a escribir" name = "contenido" onInput = {(e:any) => handleInputChange(e)}>{image !== '' ? <img src={image} /> : ''}{audio !== '' ?   <embed  src={audio.recordDataBase64} width="100%" height= "100em" />: ''} {radioButton.map((number:any, index:any) => (
+     console.log(index + " Sujeto" + number)
+  ))}
+  </IonTextarea>
   </IonItem>
 
  
-
-
-  {radioButton.map((radio:any) =>(
-     <IonRadioGroup value = {selected}>
-     <IonListHeader >
-     |
-       <IonLabel>Name</IonLabel>
-     </IonListHeader>
-     
-     <IonItem>
-       <IonLabel>{radio}</IonLabel>
-       <IonRadio slot="start" value="biff" />
-     </IonItem>
-     </IonRadioGroup>
-  ))}
  
 
  {showBackground?<div className="scrolls">{imageUrl.map((image:any)=> (
@@ -226,7 +237,7 @@ const CrearNota: React.FC<ContainerProps> = () => {
      <IonIcon icon = {imageOutline} className="icono-menu" onClick = {() => takePicture()}></IonIcon> 
      <IonIcon icon = {createOutline} className="icono-menu"></IonIcon>
      <IonIcon icon = {checkboxOutline} className="icono-menu" onClick = {() => agregarRadioButton()}></IonIcon>
-     <IonIcon icon = {pencilOutline} className="icono-menu" onMouseEnter = {() => activarHover()}></IonIcon>
+     <IonIcon icon = {pencilOutline} className="icono-menu" ></IonIcon>
    </IonItem>
  : ""}
      
