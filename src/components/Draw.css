@@ -48,12 +48,13 @@
 }
 
 .boton-img{
-  text-align: left;
+  text-align: center;
     display:inline-block;
     width: 2em;
   height: 2em;
     border-radius: 100px;
-    box-shadow: 0 0 8px lightgray;
+    cursor:pointer;
+   
 }
 
 
@@ -72,6 +73,7 @@
     display:inline-block;
     width: 1.5em;
     height: 1.5em;
+    cursor:pointer;
 
 }
 
@@ -130,3 +132,14 @@
 
 
 
+.opciones{
+  justify-content: space-around;
+ 
+}
+
+
+.icono-menu{
+  margin-left: auto;
+  margin-right: auto;
+  cursor:pointer;
+}

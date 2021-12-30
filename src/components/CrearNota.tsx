@@ -3,7 +3,7 @@ import React, { ChangeEvent, Fragment, useState, useEffect, useRef} from 'react'
 import { IonButton, IonButtons, IonCard, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonPopover, IonRadio, IonRadioGroup, IonTextarea, IonTitle, IonVirtualScroll } from '@ionic/react';
 import { chevronBack, shirtOutline, shareOutline, ellipsisVerticalOutline, checkmark, micOutline, imageOutline, pencilOutline, checkboxOutline, createOutline, stopCircleOutline, alarmOutline, caretDownOutline, phonePortraitOutline } from 'ionicons/icons'
 import '../funcionesFirebase';
-import { addOrEdit } from '../funcionesFirebase';
+import { addOrEdit, uploadImage } from '../funcionesFirebase';
 import { Camera, CameraResultType} from '@capacitor/camera'
 import { BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
 import { VoiceRecorder, VoiceRecorderPlugin, RecordingData, GenericResponse, CurrentRecordingStatus } from 'capacitor-voice-recorder';
@@ -56,7 +56,7 @@ const CrearNota: React.FC<ContainerProps> = () => {
   const [showBackground, setShowBackground] = useState(false);
   const [imagenDeFondo, setImagenDeFondo] = useState('');
   const [values, setValues] = useState(initialStateValues);
-  const [image, setImage] = useState<string>('');
+  const [image, setImage] = useState<any>('');
   const [audio, setAudio] = useState([] as any);
  
 
@@ -101,13 +101,15 @@ const CrearNota: React.FC<ContainerProps> = () => {
 
   const takePicture = async () =>{
     const photo = await Camera.getPhoto({
-      quality: 90,
+      quality: 10,
       allowEditing: true,
       resultType: CameraResultType.Uri
-    })
-    setImage(photo.webPath|| ''); 
-    console.log(image);
-    setValues({...values, ['imagen']: image,})
+    });
+    setImage(photo.webPath)
+    setValues({...values, ['imagen']: String(photo.webPath)})
+    
+    
+    
   }
 
   const recordAudio = async ()=>{
@@ -121,12 +123,13 @@ const CrearNota: React.FC<ContainerProps> = () => {
 
   const stopAudio = async ()=>{
     VoiceRecorder.stopRecording()
-    .then((result: RecordingData) => setAudio(result.value))
+    .then((result: RecordingData) => {setAudio(result.value); setValues({...values,['audio']: String(result.value.recordDataBase64)})} )
     
     .catch(error => console.log(error))
+   
     setAudioActivo(false);
     console.log(audio);
-    setValues({...values,['audio']: String(audio.recordDataBase64)});
+  
   }
 
   const agregarRadioButton = () =>{
@@ -141,9 +144,9 @@ const CrearNota: React.FC<ContainerProps> = () => {
   }
 
   const setBackground = (imagenUrl: string) =>{
+    setValues({...values, ['fondo']: imagenUrl}); 
     setImagenDeFondo(imagenUrl);
-    setValues({...values, ['fondo']: imagenDeFondo}); 
-    setValues({...values, ['fondo']: imagenDeFondo}); 
+   
     setShowBackground(false);
   }
 
@@ -214,7 +217,7 @@ const CrearNota: React.FC<ContainerProps> = () => {
       <IonInput type = "text" className="form-control" value = {values.titulo} placeholder = "Título" name = "titulo" onMouseEnter = {() => activarHover()}   onMouseLeave = {() => desactivarHover()} onInput = {(e:any) => handleInputChange(e)} ></IonInput>
   </IonItem>
   <IonItem color = "transparent" lines = "none">
-  <IonTextarea  onClick = {() => getSelectedText(window.getSelection()?.toString())} ref = {textArea}  rows = {100} autoGrow = {true}   onMouseUp = {() => activarMenu()} value = {values.contenido} onMouseDown= {() => desactivarMenu()} placeholder="Empiece a escribir" name = "contenido" onInput = {(e:any) => handleInputChange(e)}>{image !== '' ? <img src={image} /> : ''}{audio !== '' ?   <embed  src={audio.recordDataBase64} width="100%" height= "100em" />: ''} {radioButton.map((number:any, index:any) => (
+  <IonTextarea  rows = {100} onClick = {() => getSelectedText(window.getSelection()?.toString())} ref = {textArea}  autoGrow = {true}   onMouseUp = {() => activarMenu()} value = {values.contenido} onMouseDown= {() => desactivarMenu()} placeholder="Empiece a escribir" name = "contenido" onInput = {(e:any) => handleInputChange(e)}>{image !== '' ?  <img  src={image} />: ''}{audio == '' ?   <audio src={audio.recordDataBase64}  /> : <audio controls src={audio.recordDataBase64}  />} {radioButton.map((number:any, index:any) => (
      console.log(index + " Sujeto" + number)
   ))}
   </IonTextarea>

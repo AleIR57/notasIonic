@@ -143,3 +143,16 @@ img{
     margin-right: -2%;
 }
 
+audio {
+    width: 100%;    
+    color:turquoise;
+    height: 25px;
+    
+}
+
+
+audio::-webkit-media-controls-panel {
+    background-color:var(--bg);
+
+  }
+

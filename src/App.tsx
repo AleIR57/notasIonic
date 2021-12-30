@@ -39,6 +39,7 @@ setupIonicReact();
 const App: React.FC = () => (
   <Router>
     <Switch>
+    
       <Route path = "/inicio">
         <Home/>
         </Route>

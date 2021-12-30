@@ -1,5 +1,6 @@
-import { db } from "./firebase";
+import { db, dbStorage } from "./firebase";
 import React, {useEffect} from 'react';
+import { codeSlashOutline } from "ionicons/icons";
 
 
 
@@ -39,6 +40,18 @@ export const getLinkById = async (id:any) =>{
 export const updateById = async (id:any, linkObject:any) =>{
     await db.collection('notas').doc(id).update(linkObject)
     console.log("Nota actualizada");
+}
+
+export const uploadImage = async (imagen: any) =>{
+    let storageRef = dbStorage.ref();
+    let storageRefAux = '';
+    await storageRef.child('imagenes/'+'imagen1').put(imagen).then((snapshot:any) => {
+        snapshot.ref.getDownloadURL().then((result:any) =>{
+            console.log("el resultado en api: " + result);
+            return result;
+        })
+    })
+   
 }
 
 

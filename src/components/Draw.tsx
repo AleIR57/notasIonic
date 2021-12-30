@@ -1,7 +1,8 @@
 import {useRef, useState, Fragment} from 'react';
 import './Draw.css';
 import CanvasDraw from "react-canvas-draw"
-import { IonItem, IonLabel, IonRange } from '@ionic/react';
+import { IonIcon, IonItem, IonLabel, IonRange } from '@ionic/react';
+import { beakerOutline, brushOutline, checkboxOutline, createOutline, imageOutline, pencilOutline, refreshOutline, returnUpBackOutline, saveOutline, tabletPortraitOutline } from 'ionicons/icons';
 
 const Draw = () =>{
     const canvas = useRef<CanvasDraw>(null);
@@ -73,13 +74,14 @@ const Draw = () =>{
         </IonRange>
 
         : ''}
+        <IonItem className = "opciones " color = "transparent" lines = "none">
         {(!activateColors)?<div style = {{backgroundColor: color}}  onClick={() => showColors()} className = "boton-img"></div>: '' }
-        {!activateColors ?<img src = "https://cdn.pixabay.com/photo/2012/04/13/12/50/pencil-32276_960_720.png" onClick={() => showBrush()} className = "boton-pencil"></img>: ''}
-        {!activateColors ?<img src = "https://lh3.googleusercontent.com/proxy/_k0AGGFo6FkTrwC8CfwI8YmNZUJST6Jkb6bptKeXQaVsQMjmZ0MMmTSAfDU4zjUIyCvcvWbN8L5lyTgc6vPcAM6P0GhVm4vFDGVwKuhaeMh2BsWfNd2hNO8" onClick={() => eraser('white')} className = "boton-pencil"></img>: ''}
-        {!activateColors ?<img src = "https://cdn-icons-png.flaticon.com/512/724/724999.png" onClick={() => undo()} className = "boton-pencil"></img>: ''}
-        {!activateColors ?<img src = "https://icon-library.com/images/delete-all-icon/delete-all-icon-1.jpg" onClick={() => clear()} className = "boton-pencil"></img>: ''}
-        {!activateColors ?<img src = "https://iconarchive.com/download/i103415/paomedia/small-n-flat/floppy.ico" onClick={() => save()} className = "boton-pencil"></img>: ''}
-        
+        {!activateColors ?<IonIcon  icon = {brushOutline} className="icono-menu" onClick={() => showBrush()}></IonIcon> : ''}
+        {!activateColors ? <IonIcon icon = {tabletPortraitOutline} className="icono-menu" onClick={() => eraser('white')}></IonIcon>: ''}
+        {!activateColors ?<IonIcon icon = {returnUpBackOutline} className="icono-menu" onClick={() => undo()} ></IonIcon>: ''}
+        {!activateColors ?<IonIcon icon = {refreshOutline} className="icono-menu" onClick={() => clear()}></IonIcon>: ''}
+        {!activateColors ?<IonIcon icon = {saveOutline} className="icono-menu" onClick={() => save()}></IonIcon>: ''}
+       
         { activateColors ?<div onClick = {() => changeColor('#2C272E')} className = "color-img"></div>: ''}
         { activateColors ?<div onClick = {() => changeColor('#EAEAEA')} className = "color-img"></div>: ''}
         { activateColors ?<div onClick = {() => changeColor('#F56FAD')} className = "color-img"></div>: ''}
@@ -95,7 +97,7 @@ const Draw = () =>{
         { activateColors ?<div onClick = {() => changeColor('#FF7F3F')} className = "color-img"></div>: ''}
         { activateColors ?<div onClick = {() => changeColor('#DD4A48')} className = "color-img"></div>: ''}
         { activateColors ?<div onClick = {() => changeColor('#8F5B4A')} className = "color-img"></div>: ''}
-            
+        </IonItem>
         </div>
         </Fragment>
 

@@ -60,7 +60,7 @@ const EditarNota: React.FC<ContainerProps> = () => {
   const [showBackground, setShowBackground] = useState(false);
   const [imagenDeFondo, setImagenDeFondo] = useState('');
   const [values, setValues] = useState(initialStateValues);
-  const [image, setImage] = useState<string>('');
+  const [image, setImage] = useState<any>('');
   const [audio, setAudio] = useState([] as any);
 
   const divStyle = {
@@ -128,8 +128,8 @@ const EditarNota: React.FC<ContainerProps> = () => {
       allowEditing: true,
       resultType: CameraResultType.Uri
     })
-    setImage(photo.webPath || ''); 
-    console.log(image);
+    setImage(photo.webPath)
+    setValues({...values, ['imagen']: String(photo.webPath)})
   }
 
 
@@ -144,7 +144,7 @@ const EditarNota: React.FC<ContainerProps> = () => {
 
   const stopAudio = async ()=>{
     VoiceRecorder.stopRecording()
-    .then((result: RecordingData) => setAudio(result.value))
+    .then((result: RecordingData) => {setAudio(result.value); setValues({...values,['audio']: String(result.value.recordDataBase64)})} )
     
     .catch(error => console.log(error))
     setAudioActivo(false);
@@ -163,6 +163,7 @@ const EditarNota: React.FC<ContainerProps> = () => {
   }
 
   const setBackground = (imagenUrl: string) =>{
+    setValues({...values, ['fondo']: imagenUrl}); 
     setImagenDeFondo(imagenUrl);
     setShowBackground(false);
   }

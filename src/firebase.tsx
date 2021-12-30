@@ -1,5 +1,6 @@
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
+import 'firebase/compat/storage'
     const firebaseConfig = {
         apiKey: "AIzaSyAQQKrR96haGmB5DnEB0FitFiFBjGivgGQ",
         authDomain: "notas-ed1c2.firebaseapp.com",
@@ -15,6 +16,8 @@ import 'firebase/compat/firestore';
     const fb = firebase.initializeApp(firebaseConfig);
 
     export const db = fb.firestore();
+
+    export const dbStorage = fb.storage();
   
   export default firebaseConfig;
   
