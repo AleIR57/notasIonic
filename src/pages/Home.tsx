@@ -1,4 +1,4 @@
-import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonLabel, IonPage, IonSearchbar, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from '@ionic/react';
+import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonItem, IonLabel, IonPage, IonSearchbar, IonSegment, IonSegmentButton, IonTitle, IonToolbar, SearchbarChangeEventDetail } from '@ionic/react';
 
 import './Home.css';
 import {add, clipboardOutline, checkboxOutline} from 'ionicons/icons'
@@ -15,7 +15,23 @@ const Home: React.FC = () => {
 
   const ionSegment:any = useRef<HTMLIonSegmentElement>(null);
   const [activateNotas, setActivateNotas] = useState(true);
-
+  const [showModal, setShowModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterActivated, setFilterActivated] = useState(false);
+  const [filteredSearch, setFilteredSearch] = useState([
+  {
+    id: '',
+    titulo: '',
+    contenido: '',
+    imagen: '',
+    audio: '',
+    fondo: '',
+    fechaCreacion: '',
+    fechaActualizacion: '',
+    dibujo: '',
+  }])
+  
+ 
 
   const [notesAux, setNotesAux] = useState([] as any);
 
@@ -29,18 +45,29 @@ const Home: React.FC = () => {
             docs.push({...doc.data(), id:doc.id});
         });
         setNotesAux(docs);
+        
+      
+        ionSegment.current.value = 'notas';
+        setActivateNotas(true);
     });
-
-
-   
+    setFilteredSearch(notesAux);
+  
 };
 
   useEffect(()=>{
-    ionSegment.current.value = 'notas';
-    setActivateNotas(true);
     getNotes();
-    console.log(notesAux);
-  }, []);
+   
+    let tempSearchResult = notesAux.filter((ele:any) => ele.titulo.includes(searchQuery));
+    if(tempSearchResult.length == 1){
+      setFilterActivated(true)
+    }
+      console.log(tempSearchResult);
+      setFilteredSearch([...tempSearchResult]);
+      console.log(filteredSearch);
+      
+  }, [searchQuery]);
+
+
 
   const segmentChanged = (e: CustomEvent) =>{
     console.log(e.detail.value);
@@ -65,35 +92,42 @@ const Home: React.FC = () => {
               <IonSegmentButton value = "notas"><IonLabel></IonLabel><IonIcon  icon = {clipboardOutline} ></IonIcon></IonSegmentButton>
               <IonSegmentButton value = "tareas"><IonLabel></IonLabel><IonIcon  icon = {checkboxOutline} ></IonIcon></IonSegmentButton>
           </IonSegment>
+          <IonItem>
+          <IonSearchbar class = "searchbar" placeholder = "Buscar nota" value={searchQuery} onIonChange={e => setSearchQuery(e.detail.value!) }></IonSearchbar>
+          </IonItem>
+       
         </IonToolbar>
       </IonHeader>
     
       <IonContent fullscreen>
     
-      
-  
-        {notesAux.map((note:any) =>(
-        <div  key = {note.id}>
-            {activateNotas? 
-          <IonCard>
-           <Link  className = "redirigir" to = {`/editar-nota/${note.id}`}>
+      {filteredSearch.map((search) => (  <IonCard key = {search.id}>
+           <Link  className = "redirigir" to = {`/editar-nota/${search.id}`}>
           <IonCardHeader>
-            <IonCardTitle>{note.titulo}</IonCardTitle>
+            <IonCardTitle>{search.titulo}</IonCardTitle>
           </IonCardHeader>
 
           <IonCardContent className = "card-contenido">
-            {note.fechaActualizacion.substr(4,17)}
+            {search.fechaActualizacion.substr(4,17)}
       </IonCardContent>
       </Link>
-        </IonCard>
-  
-      : ''}
-     
-        </div>
-        
-        )
-        )}    
+        </IonCard>))}
 
+        {!filterActivated ? <div>
+        {notesAux.map((search:any) => (  <IonCard key = {search.id}>
+           <Link  className = "redirigir" to = {`/editar-nota/${search.id}`}>
+          <IonCardHeader>
+            <IonCardTitle>{search.titulo}</IonCardTitle>
+          </IonCardHeader>
+
+          <IonCardContent className = "card-contenido">
+            {search.fechaActualizacion.substr(4,17)}
+      </IonCardContent>
+      </Link>
+        </IonCard>))}
+        </div> : ''}
+        
+  
 {activateNotas? 
           <IonFab vertical="bottom" horizontal = "end" slot = "fixed">
      

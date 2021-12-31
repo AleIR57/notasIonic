@@ -11,3 +11,8 @@ IonIcon{
 .card-contenido{
     color: white;
 }
+
+.searchbar{
+    margin-top: 2%;
+    --border-radius: 100px;
+}
