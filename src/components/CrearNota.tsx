@@ -3,17 +3,20 @@ import React, { ChangeEvent, Fragment, useState, useEffect, useRef} from 'react'
 import { IonButton, IonButtons, IonCard, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonPopover, IonRadio, IonRadioGroup, IonTextarea, IonTitle, IonVirtualScroll } from '@ionic/react';
 import { chevronBack, shirtOutline, shareOutline, ellipsisVerticalOutline, checkmark, micOutline, imageOutline, pencilOutline, checkboxOutline, createOutline, stopCircleOutline, alarmOutline, caretDownOutline, phonePortraitOutline } from 'ionicons/icons'
 import '../funcionesFirebase';
-import { addOrEdit, uploadImage } from '../funcionesFirebase';
+import { addOrEdit, getDraw, saveDraw} from '../funcionesFirebase';
 import { Camera, CameraResultType} from '@capacitor/camera'
+import { Redirect, useHistory, useParams } from 'react-router';
 import { BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
 import { VoiceRecorder, VoiceRecorderPlugin, RecordingData, GenericResponse, CurrentRecordingStatus } from 'capacitor-voice-recorder';
 import { copyFileSync } from 'fs';
+import CanvasDraw from "react-canvas-draw";
 
 
 
 interface ContainerProps { }
 
 const CrearNota: React.FC<ContainerProps> = () => {
+  const canvas = useRef<CanvasDraw>(null);
   const textArea = useRef<HTMLIonTextareaElement>(null);
   const [textVal, setTextVal] = useState('');
   const [textFromTextArea, setTextFromTextArea] = useState(''); 
@@ -21,6 +24,11 @@ const CrearNota: React.FC<ContainerProps> = () => {
   const [hoverActivo, setHoverActivo] = useState(false);
   const [menuActivo, setMenuActivo] = useState(false);
   const [audioActivo, setAudioActivo] = useState(false);
+  const history = useHistory();
+
+  let base64data:any;
+  let dibujo = '';
+
 
   const initialStateValues = {
     titulo: '',
@@ -28,6 +36,9 @@ const CrearNota: React.FC<ContainerProps> = () => {
     imagen: '',
     audio: '',
     fondo: '',
+    fechaCreacion: '',
+    fechaActualizacion: '',
+    dibujo: '',
     };
 
     const imageUrl = [{
@@ -45,6 +56,21 @@ const CrearNota: React.FC<ContainerProps> = () => {
     },{
       id: 5,
       imagen: 'https://cdn.ipadizate.com/2020/08/MixByArthur1992aS.jpg',
+    },{
+      id: 6,
+      imagen: 'http://www.solofondos.com/wp-content/uploads/2018/03/873385d2a6dd10850b68ab2bea04f6e0.jpg',
+    },{
+      id: 7,
+      imagen: 'https://www.todofondos.net/wp-content/uploads/todofondos-colorespasteles2-576x1024.jpg',
+    },{
+      id: 8,
+      imagen: 'https://i.pinimg.com/236x/ee/2d/08/ee2d08f4d540f26f1de0cff889c52f01.jpg',
+    },{
+      id: 9,
+      imagen: 'https://i.pinimg.com/236x/b1/1f/11/b11f11ab6a30cae10d60282c0caadc1b.jpg',
+    },{
+      id: 10,
+      imagen: 'https://i.pinimg.com/originals/a3/fd/e8/a3fde80aebe2d21538eeb49c63586bc1.jpg',
     }]
 
    
@@ -67,17 +93,35 @@ const CrearNota: React.FC<ContainerProps> = () => {
   
   };
  
+  useEffect(() =>{
+    
+    let fechaInicio:Date = new Date();
+    let fechaUpdate:Date = new Date();
+    let draw: any = getDraw();
+    setValues({...values, ['fechaCreacion']: String(fechaInicio), ['fechaActualizacion']: String(fechaUpdate), ['dibujo']: draw});
+    if(draw == undefined){
+      console.log("Todavía no hay dibujo");
+    }
+    else if (draw != undefined){
+      canvas.current?.loadSaveData(draw);
+    }
+  }, [])
+
 
   const handleInputChange = async(e: React.ChangeEvent<any>)  =>{
+    
     const {name, value } =  await e.target;
      setValues({...values, [name]: value});
+
      console.log(values);
   }
 
   const handleSubmit = (e: React.ChangeEvent<any>) =>{
     e.preventDefault();
+    
     addOrEdit(values);
     setValues({...initialStateValues});
+    history.push('/inicio');
   }
 
   const activarHover = () =>{
@@ -103,10 +147,11 @@ const CrearNota: React.FC<ContainerProps> = () => {
     const photo = await Camera.getPhoto({
       quality: 10,
       allowEditing: true,
-      resultType: CameraResultType.Uri
+      resultType: CameraResultType.DataUrl
     });
-    setImage(photo.webPath)
-    setValues({...values, ['imagen']: String(photo.webPath)})
+    console.log(photo.dataUrl);
+    setImage(photo.dataUrl)
+    setValues({...values, ['imagen']: String(photo.dataUrl)})
     
     
     
@@ -166,17 +211,19 @@ const CrearNota: React.FC<ContainerProps> = () => {
 
 
 
+ 
 
 
   return (
     
+    
     <div style ={divStyle}>
-   
+     
     <form onSubmit = {handleSubmit}>
 
     <IonItem color = "transparent" lines = "none">
 
-<IonIcon icon = {chevronBack}>
+<IonIcon icon = {chevronBack} onClick = {() => history.push('/inicio')}>
 
 </IonIcon>
 {!hoverActivo == true ?  <IonIcon icon = {shareOutline} slot = "end">
@@ -217,7 +264,7 @@ const CrearNota: React.FC<ContainerProps> = () => {
       <IonInput type = "text" className="form-control" value = {values.titulo} placeholder = "Título" name = "titulo" onMouseEnter = {() => activarHover()}   onMouseLeave = {() => desactivarHover()} onInput = {(e:any) => handleInputChange(e)} ></IonInput>
   </IonItem>
   <IonItem color = "transparent" lines = "none">
-  <IonTextarea  rows = {100} onClick = {() => getSelectedText(window.getSelection()?.toString())} ref = {textArea}  autoGrow = {true}   onMouseUp = {() => activarMenu()} value = {values.contenido} onMouseDown= {() => desactivarMenu()} placeholder="Empiece a escribir" name = "contenido" onInput = {(e:any) => handleInputChange(e)}>{image !== '' ?  <img  src={image} />: ''}{audio == '' ?   <audio src={audio.recordDataBase64}  /> : <audio controls src={audio.recordDataBase64}  />} {radioButton.map((number:any, index:any) => (
+  <IonTextarea  rows = {100} onClick = {() => getSelectedText(window.getSelection()?.toString())} ref = {textArea}  autoGrow = {true}   onMouseUp = {() => activarMenu()} value = {values.contenido} onMouseDown= {() => desactivarMenu()} placeholder="Empiece a escribir" name = "contenido" onInput = {(e:any) => handleInputChange(e)}>{image !== '' ?  <img  src={image} />: ''}{audio == '' ?   <audio src={audio.recordDataBase64}  /> : <audio controls src={audio.recordDataBase64}  />}{values.dibujo !== undefined ? <CanvasDraw hideGrid = {true} disabled = {true} canvasWidth = {200} canvasHeight = {200} ref = {canvas}/> : ''} {radioButton.map((number:any, index:any) => (
      console.log(index + " Sujeto" + number)
   ))}
   </IonTextarea>
@@ -238,7 +285,7 @@ const CrearNota: React.FC<ContainerProps> = () => {
      <IonItem className = "opciones " color = "transparent" lines = "none" onMouseEnter = {() => activarHover()}>
       {!audioActivo ? <IonIcon icon = {micOutline} className="icono-menu" onClick = {() => recordAudio()}></IonIcon> : <IonIcon icon = {stopCircleOutline} className="icono-menu" onClick = {() => stopAudio()}></IonIcon> } 
      <IonIcon icon = {imageOutline} className="icono-menu" onClick = {() => takePicture()}></IonIcon> 
-     <IonIcon icon = {createOutline} className="icono-menu"></IonIcon>
+     <IonIcon icon = {createOutline} className="icono-menu" onClick = {() => history.push('/crear-dibujo')}></IonIcon>
      <IonIcon icon = {checkboxOutline} className="icono-menu" onClick = {() => agregarRadioButton()}></IonIcon>
      <IonIcon icon = {pencilOutline} className="icono-menu" ></IonIcon>
    </IonItem>

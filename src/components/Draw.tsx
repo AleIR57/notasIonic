@@ -3,6 +3,7 @@ import './Draw.css';
 import CanvasDraw from "react-canvas-draw"
 import { IonIcon, IonItem, IonLabel, IonRange } from '@ionic/react';
 import { beakerOutline, brushOutline, checkboxOutline, createOutline, imageOutline, pencilOutline, refreshOutline, returnUpBackOutline, saveOutline, tabletPortraitOutline } from 'ionicons/icons';
+import {uploadFile, addOrEditDraw, saveDraw} from '../funcionesFirebase';
 
 const Draw = () =>{
     const canvas = useRef<CanvasDraw>(null);
@@ -10,6 +11,13 @@ const Draw = () =>{
     const [activateColors, setActivateColors] = useState(false);
     const [brush, setBrush] = useState(1);
     const [activateBrush, setActivateBrush] = useState(false);
+  
+    const dibujo = {
+        id: '',
+        dibujo: '',
+    }
+
+    const[datosDibujo, setDatosDibujo] = useState(dibujo);
 
     const changeColor = (colorType: string) =>{
         setColor(colorType);
@@ -53,8 +61,12 @@ const Draw = () =>{
     const save = () =>{
         if (canvas.current !== null) {
             const data = canvas.current.getSaveData();
-            console.log(data);
+            saveDraw(data);
+          /*
+            setDatosDibujo({...datosDibujo, ['id']: '', ['dibujo']: data})*/
           }
+
+          //addOrEditDraw(datosDibujo);
     }
 
     return(

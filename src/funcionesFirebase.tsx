@@ -1,13 +1,18 @@
 import { db, dbStorage } from "./firebase";
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { codeSlashOutline } from "ionicons/icons";
 
-
+let dibujo:any;
 
 
 export const addOrEdit = async (linkObject:any) => {
     await db.collection('notas').doc().set(linkObject);
     console.log("Nueva nota agregada");
+}
+
+export const addOrEditDraw = async (linkObject:any) => {
+    await db.collection('dibujos').doc().set(linkObject);
+    console.log("Nuevo dibujo agregado");
 }
 
 export const getNotes = () =>{
@@ -25,10 +30,16 @@ export const getNotes = () =>{
    
 }
 
+export const saveDraw = (draw:any) =>{
+    dibujo = draw;
+}
+
+export const getDraw = () =>{
+    return dibujo;
+}
 
 export const onDeleteLink = async (id:any) =>{
         await db.collection('notas').doc(id).delete();
-        console.log("Nota eliminada");
 }
 
 export const getLinkById = async (id:any) =>{
@@ -42,7 +53,7 @@ export const updateById = async (id:any, linkObject:any) =>{
     console.log("Nota actualizada");
 }
 
-export const uploadImage = async (imagen: any) =>{
+export const uploadFile = async (imagen: any) =>{
     let storageRef = dbStorage.ref();
     let storageRefAux = '';
     await storageRef.child('imagenes/'+'imagen1').put(imagen).then((snapshot:any) => {

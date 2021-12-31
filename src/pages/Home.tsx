@@ -82,7 +82,7 @@ const Home: React.FC = () => {
           </IonCardHeader>
 
           <IonCardContent className = "card-contenido">
-            {note.contenido}
+            {note.fechaActualizacion.substr(4,17)}
       </IonCardContent>
       </Link>
         </IonCard>
