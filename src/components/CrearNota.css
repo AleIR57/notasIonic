@@ -158,3 +158,6 @@ audio::-webkit-media-controls-panel {
 
   }
 
+.accordion{
+    width: 100%;
+}

@@ -1,6 +1,6 @@
 import './EditarNota.css';
 import React, { ChangeEvent, Fragment, useEffect, useState, useRef} from 'react';
-import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonPopover, IonTextarea } from '@ionic/react';
+import { IonAccordion, IonAccordionGroup, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonPopover, IonTextarea } from '@ionic/react';
 import { chevronBack, shirtOutline, shareOutline, ellipsisVerticalOutline, checkmark, micOutline, imageOutline, pencilOutline, checkboxOutline, createOutline, alarmOutline, caretDownOutline, phonePortraitOutline, stopCircleOutline, trashBinOutline } from 'ionicons/icons'
 import '../funcionesFirebase';
 import { addOrEdit, getLinkById, updateById, onDeleteLink,getDraw, saveDraw} from '../funcionesFirebase';
@@ -75,6 +75,8 @@ const EditarNota: React.FC<ContainerProps> = () => {
       imagen: 'https://i.pinimg.com/originals/a3/fd/e8/a3fde80aebe2d21538eeb49c63586bc1.jpg',
     }]
 
+  let alto:any = 200;
+  let ancho:any = 200;
   let contador = 0;
   let radioButton:any = [];
   const history = useHistory();
@@ -260,12 +262,39 @@ const EditarNota: React.FC<ContainerProps> = () => {
  
 </IonItem>
 
+
+<div>
+
+<IonAccordionGroup >
+          <IonAccordion value="colors" class = "accordion">
+            
+            <IonItem slot="header">
+              <IonLabel>Multimedia</IonLabel>
+            </IonItem>
+            <IonList slot="content">
+              <IonItem><IonLabel>Imagen</IonLabel>
+              {image !== '' ?  <img  src={image} />: ''}</IonItem>
+              <IonItem>
+                <IonLabel>Audio</IonLabel>
+                {audio == '' ?   <audio src={audio.recordDataBase64}  /> : <audio controls src={audio.recordDataBase64}  />}
+              </IonItem>
+              <IonItem>
+              {values.dibujo !== undefined ? <IonLabel>Dibujo</IonLabel> : ''}
+                {values.dibujo !== undefined ? <CanvasDraw hideGrid = {true} disabled = {true} canvasWidth = {200} canvasHeight = {200} ref = {canvas}/> : ''}
+              </IonItem>
+              </IonList>
+              
+            </IonAccordion>
+            
+</IonAccordionGroup>
+</div>
+
   <IonItem color = "transparent" lines = "none" class = "nav">
 
       <IonInput type = "text" className="form-control" value = {values.titulo} placeholder = "Título" name = "titulo" onMouseEnter = {() => activarHover()}   onMouseLeave = {() => desactivarHover()} onInput = {(e:any) => handleInputChange(e)} ></IonInput>
   </IonItem>
   <IonItem color = "transparent" lines = "none">
-  <IonTextarea onClick = {() => getSelectedText(window.getSelection()?.toString())}  ref = {textArea}  rows = {100} autoGrow = {true}   onMouseUp = {() => activarMenu()}  value = {values.contenido} onMouseDown = {() => desactivarMenu()} placeholder="Empiece a escribir" name = "contenido" onInput = {(e:any) => handleInputChange(e)}>{image !== '' ? <img src={image} /> : ''}{audio == '' ?   <audio src={audio}  /> : <audio controls src={audio}  />} {values.dibujo !== undefined ? <CanvasDraw hideGrid = {true} disabled = {true} canvasWidth = {200} canvasHeight = {200} ref = {canvas}/> : ''} {radioButton.map((number:any, index:any) => (
+  <IonTextarea onClick = {() => getSelectedText(window.getSelection()?.toString())}  ref = {textArea}  rows = {100} autoGrow = {true}   onMouseUp = {() => activarMenu()}  value = {values.contenido} onMouseDown = {() => desactivarMenu()} placeholder="Empiece a escribir" name = "contenido" onInput = {(e:any) => handleInputChange(e)}>  {radioButton.map((number:any, index:any) => (
      console.log(index + " Sujeto" + number)
   ))}</IonTextarea>
   </IonItem>
