@@ -147,3 +147,12 @@ img{
     z-index:10000;
 }
 
+
+.accordion{
+    background-color: transparent;
+}
+
+.contenido-accordion{
+    background-color: transparent;
+}
+

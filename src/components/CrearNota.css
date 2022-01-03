@@ -161,3 +161,16 @@ audio::-webkit-media-controls-panel {
 .accordion{
     width: 100%;
 }
+
+.accordion{
+    background-color: transparent;
+}
+
+.contenido-accordion{
+    background-color: transparent;
+}
+
+.lista-opciones{
+    background-color: transparent;
+}
+

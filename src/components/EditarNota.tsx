@@ -234,18 +234,18 @@ const EditarNota: React.FC<ContainerProps> = () => {
 {!hoverActivo ? 
   <IonButtons slot = "end" class = "grupoBotones" >
     <IonButton   id="trigger-button"  >  <IonIcon icon = {ellipsisVerticalOutline}></IonIcon></IonButton>
-    <IonPopover trigger="trigger-button" dismissOnSelect={true}>
-      <IonList >
-      <IonItem class = "contenido-popover">
+    <IonPopover trigger="trigger-button" dismissOnSelect={true} color = "transparent">
+      <IonList color = "blue" style={divStyle}>
+      <IonItem class = "contenido-popover" color = "transparent" lines = "none">
         <IonIcon icon = {alarmOutline}></IonIcon><IonLabel> Recordatorio</IonLabel>
-      </IonItem>
-      <IonItem class = "contenido-popover">
+      </IonItem >
+      <IonItem class = "contenido-popover" color = "inherit" lines = "none">
       <IonIcon icon = {caretDownOutline}></IonIcon><IonLabel> Ocultar</IonLabel>
       </IonItem>
-      <IonItem  class = "contenido-popover" onMouseEnter={() => deleteDocument()}>
+      <IonItem  class = "contenido-popover"  color = "inherit" lines = "none" onMouseEnter={() => deleteDocument()}>
       <IonIcon icon = {trashBinOutline} ></IonIcon><IonLabel> Borrar</IonLabel>
       </IonItem>
-      <IonItem class = "contenido-popover"> 
+      <IonItem class = "contenido-popover" color = "inherit" lines = "none"> 
       <IonIcon icon = {phonePortraitOutline}></IonIcon><IonLabel> Colocar en la pantalla de inicio</IonLabel>
       </IonItem>
       </IonList>
@@ -262,24 +262,23 @@ const EditarNota: React.FC<ContainerProps> = () => {
  
 </IonItem>
 
-
 <div>
 
-<IonAccordionGroup >
-          <IonAccordion value="colors" class = "accordion">
+<IonAccordionGroup color = "inherit">
+          <IonAccordion value="colors" class = "accordion" color = "inherit">
             
-            <IonItem slot="header">
+            <IonItem slot="header" color = "inherit" className = "contenido-accordion" lines = "none">
               <IonLabel>Multimedia</IonLabel>
             </IonItem>
-            <IonList slot="content">
-              <IonItem><IonLabel>Imagen</IonLabel>
+            <IonList slot="content" color = "inherit" className = "contenido-accordion">
+              <IonItem color = "inherit" className = "contenido-accordion" lines = "none"><IonLabel>Imagen</IonLabel>
               {image !== '' ?  <img  src={image} />: ''}</IonItem>
-              <IonItem>
+              <IonItem color = "inherit" className = "contenido-accordion" lines = "none">
                 <IonLabel>Audio</IonLabel>
-                {audio == '' ?   <audio src={audio.recordDataBase64}  /> : <audio controls src={audio.recordDataBase64}  />}
+                {audio == '' ?   <audio src={audio}  /> : <audio controls src={audio}  />}
               </IonItem>
-              <IonItem>
-              {values.dibujo !== undefined ? <IonLabel>Dibujo</IonLabel> : ''}
+              <IonItem color = "inherit" className = "contenido-accordion" lines = "none">
+              {values.dibujo == undefined ? <IonLabel>Dibujo</IonLabel> : ''}
                 {values.dibujo !== undefined ? <CanvasDraw hideGrid = {true} disabled = {true} canvasWidth = {200} canvasHeight = {200} ref = {canvas}/> : ''}
               </IonItem>
               </IonList>

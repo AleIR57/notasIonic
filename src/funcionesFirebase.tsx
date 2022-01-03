@@ -15,9 +15,30 @@ export const addOrEditDraw = async (linkObject:any) => {
     console.log("Nuevo dibujo agregado");
 }
 
+export const addOrEditTask = async (linkObject:any, title:string) => {
+    await db.collection('tareas/').doc(title).set(Object.assign({}, linkObject));
+    console.log("Nueva tarea agregada");
+}
+
+
 export const getNotes = () =>{
     const docs:any[] = [];
       db.collection('notas').onSnapshot((querySnapshot) =>{
+          
+        querySnapshot.forEach(doc =>{
+         
+           
+            docs.push({...doc.data(), id:doc.id});
+        })
+    })
+
+    return docs;
+   
+}
+
+export const getTask = () =>{
+    const docs:any[] = [];
+      db.collection('tareas').onSnapshot((querySnapshot) =>{
           
         querySnapshot.forEach(doc =>{
          
@@ -48,10 +69,23 @@ export const getLinkById = async (id:any) =>{
     return data;
 }
 
+export const getLinkTaskById = async (id:any) =>{
+    const doc = await db.collection('notas').doc(id).get();
+    const data = doc.data();
+    return data;
+}
+
+
 export const updateById = async (id:any, linkObject:any) =>{
     await db.collection('notas').doc(id).update(linkObject)
     console.log("Nota actualizada");
 }
+
+export const updateTaskById = async (id:any, linkObject:any) =>{
+    await db.collection('notas').doc(id).update(linkObject)
+    console.log("Nota actualizada");
+}
+
 
 export const uploadFile = async (imagen: any) =>{
     let storageRef = dbStorage.ref();
