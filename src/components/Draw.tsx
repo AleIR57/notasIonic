@@ -1,11 +1,13 @@
 import {useRef, useState, Fragment} from 'react';
 import './Draw.css';
 import CanvasDraw from "react-canvas-draw"
+import {useHistory} from 'react-router'
 import { IonIcon, IonItem, IonLabel, IonRange } from '@ionic/react';
 import { beakerOutline, brushOutline, checkboxOutline, createOutline, imageOutline, pencilOutline, refreshOutline, returnUpBackOutline, saveOutline, tabletPortraitOutline } from 'ionicons/icons';
 import {uploadFile, addOrEditDraw, saveDraw} from '../funcionesFirebase';
 
 const Draw = () =>{
+    const history = useHistory();
     const canvas = useRef<CanvasDraw>(null);
     const [color, setColor ] = useState('#2C272E');
     const [activateColors, setActivateColors] = useState(false);
@@ -62,6 +64,7 @@ const Draw = () =>{
         if (canvas.current !== null) {
             const data = canvas.current.getSaveData();
             saveDraw(data);
+            history.push('/crear-nota');
           /*
             setDatosDibujo({...datosDibujo, ['id']: '', ['dibujo']: data})*/
           }
@@ -86,7 +89,7 @@ const Draw = () =>{
         </IonRange>
 
         : ''}
-        <IonItem className = "opciones " color = "transparent" lines = "none">
+        <IonItem className = "opciones "  lines = "none">
         {(!activateColors)?<div style = {{backgroundColor: color}}  onClick={() => showColors()} className = "boton-img"></div>: '' }
         {!activateColors ?<IonIcon  icon = {brushOutline} className="icono-menu" onClick={() => showBrush()}></IonIcon> : ''}
         {!activateColors ? <IonIcon icon = {tabletPortraitOutline} className="icono-menu" onClick={() => eraser('white')}></IonIcon>: ''}

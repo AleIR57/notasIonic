@@ -5,7 +5,9 @@ IonIcon{
 
 .redirigir{
     text-decoration: none;
+
 }
+
 
 
 .card-contenido{
@@ -14,5 +16,6 @@ IonIcon{
 
 .searchbar{
     margin-top: 2%;
+    margin-bottom: 2%;
     --border-radius: 100px;
 }

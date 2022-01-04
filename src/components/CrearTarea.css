@@ -1,0 +1,26 @@
+.colores{
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.item-color{
+    width: 1.8em;
+    height: 1.8em;
+    border-radius: 100px;
+}
+
+.icono-menu-color{
+    width: 1.8em;
+    height: 1.8em;
+    border-radius: 100px;
+}
+
+.list-md{
+    background: transparent;
+}
+
+.lista-elementos{
+    height: 100%;
+ 
+}

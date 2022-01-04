@@ -7,7 +7,7 @@ import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
 import { Redirect} from 'react-router-dom';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useDebugValue } from 'react';
 import { db, dbStorage } from "../firebase";
 
 
@@ -136,7 +136,10 @@ const getTask = async () =>{
           <IonCardHeader>
             <IonCardTitle>{search.titulo}</IonCardTitle>
           </IonCardHeader>
-
+          <IonCardContent className ="card-contenido">
+            
+            {search.fechaActualizacion.substr(4,17)}
+          </IonCardContent>
         
       </Link>
         </IonCard>))}
@@ -147,6 +150,9 @@ const getTask = async () =>{
           <IonCardHeader>
             <IonCardTitle>{search.titulo}</IonCardTitle>
           </IonCardHeader>
+          <IonCardContent  className ="card-contenido">
+            {search.fechaActualizacion.substr(4,17)}
+          </IonCardContent>
 
   
       </Link>
@@ -161,7 +167,8 @@ const getTask = async () =>{
           <IonCard key = {index}>
           <Link  className = "redirigir" to = {`/editar-tarea/${value.id.replace("%20", "")}`}>
          <IonCardHeader>
-           <IonCardTitle>{value.id}</IonCardTitle>
+           <IonCardTitle>{value.title}</IonCardTitle>
+
          </IonCardHeader>
 
  

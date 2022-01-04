@@ -15,8 +15,8 @@ export const addOrEditDraw = async (linkObject:any) => {
     console.log("Nuevo dibujo agregado");
 }
 
-export const addOrEditTask = async (linkObject:any, title:string) => {
-    await db.collection('tareas').doc().set(Object.assign({title}, linkObject));
+export const addOrEditTask = async (linkObject:any) => {
+    await db.collection('tareas').doc().set(Object.assign({}, linkObject));
     console.log("Nueva tarea agregada");
 }
 
@@ -63,6 +63,10 @@ export const onDeleteLink = async (id:any) =>{
         await db.collection('notas').doc(id).delete();
 }
 
+export const onDeleteTask = async (id:any) =>{
+    await db.collection('tareas').doc(id).delete();
+}
+
 export const getLinkById = async (id:any) =>{
     const doc = await db.collection('notas').doc(id).get();
     const data = doc.data();
@@ -81,9 +85,10 @@ export const updateById = async (id:any, linkObject:any) =>{
     console.log("Nota actualizada");
 }
 
+
 export const updateTaskById = async (id:any, linkObject:any) =>{
-    await db.collection('notas').doc(id).update(linkObject)
-    console.log("Nota actualizada");
+    await db.collection('tareas').doc(id).update(linkObject)
+    console.log("Tarea actualizada");
 }
 
 

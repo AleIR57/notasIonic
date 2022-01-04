@@ -16,6 +16,7 @@ import CanvasDraw from "react-canvas-draw";
 interface ContainerProps { }
 
 const CrearNota: React.FC<ContainerProps> = () => {
+  const accordion = useRef<HTMLIonAccordionElement>(null);
   const canvas = useRef<CanvasDraw>(null);
   const textArea = useRef<HTMLIonTextareaElement>(null);
   const [textVal, setTextVal] = useState('');
@@ -265,21 +266,21 @@ const CrearNota: React.FC<ContainerProps> = () => {
 <div>
 
 <IonAccordionGroup color = "inherit">
-          <IonAccordion value="colors" class = "accordion" color = "inherit">
+          <IonAccordion ref = {accordion} value="colors" class = "accordion" color = "inherit">
             
             <IonItem slot="header" color = "inherit" className = "contenido-accordion" lines = "none">
               <IonLabel>Multimedia</IonLabel>
             </IonItem>
             <IonList slot="content" color = "inherit" className = "contenido-accordion">
               <IonItem color = "inherit" className = "contenido-accordion" lines = "none"><IonLabel>Imagen</IonLabel>
-              {image !== '' ?  <img  src={image} />: ''}</IonItem>
+              {image !== '' ?  <img  src={image} className = "imagen-accordion"/>: ''}</IonItem>
               <IonItem color = "inherit" className = "contenido-accordion" lines = "none">
-                <IonLabel>Audio</IonLabel>
+              {audio == '' ? <IonLabel>Audio</IonLabel> : ''}
                 {audio == '' ?   <audio src={audio.recordDataBase64}  /> : <audio controls src={audio.recordDataBase64}  />}
               </IonItem>
               <IonItem color = "inherit" className = "contenido-accordion" lines = "none">
-              {values.dibujo !== undefined ? <IonLabel>Dibujo</IonLabel> : ''}
-                {values.dibujo !== undefined ? <CanvasDraw hideGrid = {true} disabled = {true} canvasWidth = {200} canvasHeight = {200} ref = {canvas}/> : ''}
+              {values.dibujo == undefined ? <IonLabel>Dibujo</IonLabel> : ''}
+                {values.dibujo !== undefined ? <CanvasDraw hideGrid = {true} disabled = {true} className = "canvas" canvasWidth = {accordion.current?.clientWidth} canvasHeight = {200} ref = {canvas}/> : ''}
               </IonItem>
               </IonList>
               
@@ -295,9 +296,7 @@ const CrearNota: React.FC<ContainerProps> = () => {
       <IonInput type = "text" className="form-control" value = {values.titulo} placeholder = "Título" name = "titulo" onMouseEnter = {() => activarHover()}   onMouseLeave = {() => desactivarHover()} onInput = {(e:any) => handleInputChange(e)} ></IonInput>
   </IonItem>
   <IonItem color = "transparent" lines = "none">
-  <IonTextarea  rows = {100} onClick = {() => getSelectedText(window.getSelection()?.toString())} ref = {textArea}  autoGrow = {true}   onMouseUp = {() => activarMenu()} value = {values.contenido} onMouseDown= {() => desactivarMenu()} placeholder="Empiece a escribir" name = "contenido" onInput = {(e:any) => handleInputChange(e)}> {radioButton.map((number:any, index:any) => (
-     console.log(index + " Sujeto" + number)
-  ))}
+  <IonTextarea  rows = {100} onClick = {() => getSelectedText(window.getSelection()?.toString())} ref = {textArea}  autoGrow = {true}   onMouseUp = {() => activarMenu()} value = {values.contenido} onMouseDown= {() => desactivarMenu()} placeholder="Empiece a escribir" name = "contenido" onInput = {(e:any) => handleInputChange(e)}> 
   </IonTextarea>
   </IonItem>
 
@@ -317,8 +316,7 @@ const CrearNota: React.FC<ContainerProps> = () => {
       {!audioActivo ? <IonIcon icon = {micOutline} className="icono-menu" onClick = {() => recordAudio()}></IonIcon> : <IonIcon icon = {stopCircleOutline} className="icono-menu" onClick = {() => stopAudio()}></IonIcon> } 
      <IonIcon icon = {imageOutline} className="icono-menu" onClick = {() => takePicture()}></IonIcon> 
      <IonIcon icon = {createOutline} className="icono-menu" onClick = {() => history.push('/crear-dibujo')}></IonIcon>
-     <IonIcon icon = {checkboxOutline} className="icono-menu" onClick = {() => agregarRadioButton()}></IonIcon>
-     <IonIcon icon = {pencilOutline} className="icono-menu" ></IonIcon>
+    
    </IonItem>
  : ""}
      

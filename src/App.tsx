@@ -33,18 +33,23 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  Redirect
 } from "react-router-dom";
 
 setupIonicReact();
 
 const App: React.FC = () => (
   <Router>
+   
     <Switch>
-    
+    <Redirect exact from="/" to="/inicio" />
       <Route path = "/inicio">
         <Home/>
+       
         </Route>
+        
+    
         <Route path = "/crear-nota">
         <CrearNota/>
         </Route>
