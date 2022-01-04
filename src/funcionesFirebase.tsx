@@ -16,7 +16,7 @@ export const addOrEditDraw = async (linkObject:any) => {
 }
 
 export const addOrEditTask = async (linkObject:any, title:string) => {
-    await db.collection('tareas/').doc(title).set(Object.assign({}, linkObject));
+    await db.collection('tareas').doc().set(Object.assign({title}, linkObject));
     console.log("Nueva tarea agregada");
 }
 
@@ -70,7 +70,7 @@ export const getLinkById = async (id:any) =>{
 }
 
 export const getLinkTaskById = async (id:any) =>{
-    const doc = await db.collection('notas').doc(id).get();
+    const doc = await db.collection('tareas').doc(id).get();
     const data = doc.data();
     return data;
 }

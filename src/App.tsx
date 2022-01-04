@@ -27,6 +27,7 @@ import CrearNota from './components/CrearNota';
 import EditarNota from './components/EditarNota'
 import Draw from './components/Draw';
 import CrearTarea from './components/CrearTarea';
+import EditarTarea from './components/EditarTarea'
 
 import {
   BrowserRouter as Router,
@@ -55,6 +56,9 @@ const App: React.FC = () => (
         </Route>
         <Route path = "/crear-tarea">
         <CrearTarea />
+        </Route>
+        <Route path = "/editar-tarea/:id">
+        <EditarTarea />
         </Route>
     </Switch>
   </Router>

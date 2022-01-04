@@ -1,5 +1,5 @@
 import { CheckboxChangeEventDetail, IonCheckbox, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonItemDivider, IonLabel, IonList, IonPage, IonTitle, IonToolbar } from "@ionic/react";
-import { addOutline, checkboxOutline, checkmark, chevronBack, createOutline, imageOutline, pencilOutline } from "ionicons/icons";
+import { addOutline, checkboxOutline, checkmark, chevronBack, contrastOutline, createOutline, imageOutline, pencilOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import { addOrEditTask, getLinkTaskById } from "../funcionesFirebase";
@@ -7,42 +7,70 @@ import "./EditarTarea.css";
 
 interface ContainerProps { }
 
-const CrearTarea: React.FC<ContainerProps> = () => {
+const EditarTarea: React.FC<ContainerProps> = () => {
 
-    
+  let valuesAux:any = [];
     let id:any = useParams();
-    const checkboxList = [
-        { val: '', isChecked: false },
+    id = String(Object.keys(id).map(k => id[k]));
+    let checkboxList:any = [
       ];
+      let result:any = [];
       const [title, setTile] = useState('');
       const history = useHistory();
       const [checked, setChecked] = useState(false);
-      const [checkbox, addCheckbox] = useState(checkboxList);
+      const [checkbox, addCheckbox] = useState<any[]>([]);
       const [inputEmpty, setInputEmpty] = useState(true);
       const [values, setValues] = useState([]);
+      const [contador, setContador] = useState(0);
 
 
       const agregarCheckbox = () =>{
+       
+      
           setInputEmpty(false);
-          addCheckbox(checkboxList => [...checkboxList, {val: '', isChecked: false}]);
+          
+          checkboxList.push(checkbox);
+          let count = 0;
+            for (let k in checkboxList[0]) if (checkboxList[0].hasOwnProperty(k)) count++;
+          let checkboxEmpty = {
+            val: '',
+            isChecked: false
+          }
+           result = checkboxList.map((o:any, i:any) => (
+            { ...o, checkboxEmpty }))
+            addCheckbox({...result[0]})
+            
+            console.log(checkbox);
+            
+        
       }
 
       useEffect(() => {
+        console.log(JSON.stringify(id));
         getLinkTaskById(id).then(function (result:any){
-    
-            setValues({...result})
-            
+          console.log(result['title'])
+          setTile(String(result['title']));
+
+          valuesAux = result;
+          console.log(valuesAux)
+          delete valuesAux.title;
+          addCheckbox({...valuesAux});
+          
+         
+         
+  
         });
+        
       }, [])
 
       const handleInputChange = async(e: React.ChangeEvent<any>)  =>{
         
         checkbox[e.currentTarget.id] = {...checkbox[e.currentTarget.id], val: String(e.currentTarget.value), isChecked: false };
-       
+      
       }
 
       const handleInputTitleChange = async(e: React.ChangeEvent<any>)  =>{
-        
+
        setTile(e.currentTarget.value);
        console.log(title);
       }
@@ -52,8 +80,15 @@ const CrearTarea: React.FC<ContainerProps> = () => {
     }
 
       const agregarNombreCheckbox = () =>{
-          
-          setInputEmpty(true);
+        let count = 0;
+        for (let key in checkbox) {
+          if(key == 'checkboxEmpty'){
+            delete checkbox[key];
+          }
+ 
+          // Use `key` and `value`
+      }
+        setInputEmpty(true);
       }
     
     const check = (e: React.ChangeEvent<any>) =>{
@@ -82,21 +117,22 @@ const CrearTarea: React.FC<ContainerProps> = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-          <IonInput placeholder = "Título" onInput = {(e:any) => (handleInputTitleChange(e))}></IonInput>
+          <IonInput placeholder = "Título" onInput = {(e:any) => (handleInputTitleChange(e))} value = {title}></IonInput>
        
         <IonList color = "transparent">
          
 
 
-          {checkbox.map(({ val, isChecked }, i) => (
-            <IonItem key={i} color = "transparent" lines = "none">
-              <IonLabel>{val}</IonLabel>
-              <IonCheckbox slot="end" value={val} checked={isChecked} id = {String(i)} onClick = {(e) => check(e)}/>
-              {!inputEmpty && val == '' ? <IonInput placeholder = "Nombre de la tarea" id = {String(i)} onInput = {(e:any) => (handleInputChange(e))} ></IonInput>: ''}
-              <IonList>
-                  
-              </IonList>
-            </IonItem>
+          {Object.keys(checkbox).map((key:any, index:any) =>(
+  
+             <IonItem key={index} color = "transparent" lines = "none">
+             <IonLabel>{checkbox[key].val}</IonLabel>
+             <IonCheckbox slot="end" value={checkbox[key].val} checked={checkbox[key].isChecked} id = {String(index)} onClick = {(e) => check(e)}/>
+             {!inputEmpty && checkbox[key].val == '' ? <IonInput placeholder = "Nombre de la tarea" id = {String(index)} onInput = {(e:any) => (handleInputChange(e))} ></IonInput>: ''}
+             <IonList>
+                 
+             </IonList>
+           </IonItem>
           ))}
         </IonList>
       </IonContent>
@@ -117,4 +153,4 @@ const CrearTarea: React.FC<ContainerProps> = () => {
     );
 };
 
-export default CrearTarea;
+export default EditarTarea;
