@@ -10,6 +10,7 @@ import { BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
 import { VoiceRecorder, VoiceRecorderPlugin, RecordingData, GenericResponse, CurrentRecordingStatus } from 'capacitor-voice-recorder';
 import { copyFileSync } from 'fs';
 import CanvasDraw from "react-canvas-draw";
+import {Share} from '@capacitor/share'
 
 
 
@@ -120,7 +121,9 @@ const CrearNota: React.FC<ContainerProps> = () => {
 
   const handleSubmit = (e: React.ChangeEvent<any>) =>{
     e.preventDefault();
-    
+    if(values.dibujo == undefined){
+      values.dibujo = '';
+    }
     addOrEdit(values);
     setValues({...initialStateValues});
     history.push('/inicio');
@@ -211,6 +214,14 @@ const CrearNota: React.FC<ContainerProps> = () => {
     
   }
 
+  const share = async () =>{
+    Share.share({
+      title: values.titulo,
+      text: values.contenido,
+      url: 'www.sujeto.com'
+    })
+  }
+
 
 
  
@@ -228,7 +239,7 @@ const CrearNota: React.FC<ContainerProps> = () => {
 <IonIcon icon = {chevronBack} onClick = {() => history.push('/inicio')}>
 
 </IonIcon>
-{!hoverActivo == true ?  <IonIcon icon = {shareOutline} slot = "end">
+{!hoverActivo == true ?  <IonIcon icon = {shareOutline} slot = "end" onClick = {() => share()}>
 
 </IonIcon> :""}
 
